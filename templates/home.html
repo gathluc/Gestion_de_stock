@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/home.css">
+    <title>Home</title>
+</head>
+<body>
+<input type="checkbox" id="active">
+<label for="active" class="menu-btn"><span></span></label>
+<label for="active" class="close"></label>
+
+<div class="test">
+    <nav>
+        <ul>
+            <li class="nav-item active">
+                <a class="nav-link" href="/home">Accueil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="liste_fournisseur">Liste des fournisseurs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="Historique">Historique</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="liste_client">Liste des clients</a>
+            </li>
+            <li class="nav-item-out">
+                <a class="nav-link" href="{{url_for('logout')}}"><img class="mb-4" src="./static/img/logout.png" alt=""
+                                                                      width="20" height="20"></a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+<div class="wrapper">
+    <ul>
+        <li class="nav-item active">
+            <a class="nav-link" href="/">Accueil</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="liste_fournisseur">Liste des fournisseurs</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="Historique">Historique</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="liste_client">Liste des clients</a>
+        </li>
+    </ul>
+</div>
+
+<div class="tbl-header">
+    <table cellpadding="0" cellspacing="0" border="0">
+        <thead>
+        <tr class="header">
+            <th>Référence</th>
+            <th>Libelle</th>
+            <th>Quantite</th>
+            <th>Observation</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+<div class="tbl-content">
+    <table cellpadding="0" cellspacing="0" border="0">
+        <tbody>
+        {% for i in row %}
+        <tr>
+            <td>{{ i[0] }}</td>
+            <td>{{ i[1] }}</td>
+            <td>{{ i[2] }}</td>
+            {% if i[2] < 25 %}
+            <td style="color: red">Besoin d'approvisionnement</td>
+            {% elif i[2] > 200 %}
+            <td style="color: red">Stock en surplus</td>
+            {% else%}
+            <td>-</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="bouton">
+    <button onclick="Approvisionner()">Approvisionner</button>
+    <button onclick="Retirer()">Retirer</button>
+    <button onclick="Nouvelle_marchandise()">Nouvelle marchandise</button>
+</div>
+
+<div id="Approvisionner" style="display:none">
+    <form action="supply" method="post">
+        <label class="form-label">Nom du fournisseur: </label>
+        <select name="Ref_Four" class="form-select" aria-label="Default select example">
+            {% for i in fournisseur %}
+            <option value="{{ i[0] }}">{{ i[1] }}</option>
+            {% endfor %}
+        </select><br>
+        <label class="form-label">Date de livraison: </label><br>
+        <input type="date" name="Date_fourni" class="form-control"><br>
+        <label class="form-label">Référence de la marchandise: </label>
+        <select name="Ref_Mar" class="form-select" aria-label="Default select example">
+            {% for j in row %}
+            <option value="{{ j[0] }}">{{ j[1] }}</option>
+            {% endfor %}
+        </select><br>
+        <input type="number" name="Quantité" placeholder="Quantité" class="form-control"><br>
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+    </form>
+</div>
+<div id="Retirer" style="display:none">
+    <form action="retrieve" method="post">
+        <label class="form-label">Nom du client: </label>
+        <select name="Ref_Client" class="form-select" aria-label="Default select example">
+            {% for i in client %}
+            <option value="{{ i[0] }}">{{ i[1] }}</option>
+            {% endfor %}
+        </select><br>
+        <label class="form-label">Date de retrait: </label><br>
+        <input type="date" name="Date_Achat" class="form-control"><br>
+        <label class="form-label">Référence de la marchandise: </label>
+        <select name="Ref_Mar" class="form-select" aria-label="Default select example">
+            {% for i in row %}
+            <option value="{{ i[0] }}">{{ i[1] }}</option>
+            {% endfor %}
+        </select><br>
+        <input type="number" name="Quantité" placeholder="Quantité" class="form-control"><br>
+        <button type="submit" class="btn btn-primary">Retirer</button>
+    </form>
+</div>
+<div id="Nouvelle_marchandise" style="display:none">
+    <form action="create" method="post">
+        <label class="form-label">Nom du fournisseur: </label>
+        <select name="Ref_Four" class="form-select" aria-label="Default select example">
+            {% for i in fournisseur %}
+            <option value="{{ i[0] }}">{{ i[1] }}</option>
+            {% endfor %}
+        </select><br>
+        <label class="form-label">Date de livraison: </label><br>
+        <input type="date" name="Date_fourni" class="form-control"><br>
+        <input type="text" name="Ref_Mar" placeholder="Référence de la marchandise" class="form-control"><br>
+        <input type="text" name="Marchandises" placeholder="Libelle" class="form-control"><br>
+        <input type="number" name="Quantité" placeholder="Quantité" class="form-control"><br>
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+    </form>
+</div>
+</body>
+</html>
+<script>
+        function Approvisionner() {
+      var x = document.getElementById("Approvisionner");
+      var y = document.getElementById("Retirer");
+      var z = document.getElementById("Nouvelle_marchandise");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+        y.style.display = "none";
+        z.style.display = "none";
+      } else {
+        x.style.display = "none";
+        y.style.display = "none";
+        z.style.display = "none";
+      }
+    }
+
+    function Retirer() {
+      var x = document.getElementById("Approvisionner");
+      var y = document.getElementById("Retirer");
+      var z = document.getElementById("Nouvelle_marchandise");
+      if (y.style.display === "none") {
+        x.style.display = "none";
+        y.style.display = "block";
+        z.style.display = "none";
+      } else {
+        x.style.display = "none";
+        y.style.display = "none";
+        z.style.display = "none";
+      }
+    }
+
+    function Nouvelle_marchandise() {
+      var x = document.getElementById("Approvisionner");
+      var y = document.getElementById("Retirer");
+      var z = document.getElementById("Nouvelle_marchandise");
+      if (z.style.display === "none") {
+        x.style.display = "none";
+        y.style.display = "none";
+        z.style.display = "block";
+      } else {
+        x.style.display = "none";
+        y.style.display = "none";
+        z.style.display = "none";
+      }
+    }
+
+
+</script>

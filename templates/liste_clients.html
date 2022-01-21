@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/home.css">
+    <title>Liste des Clients</title>
+</head>
+<body>
+
+<input type="checkbox" id="active">
+<label for="active" class="menu-btn"><span></span></label>
+<label for="active" class="close"></label>
+
+<div class="test">
+    <nav>
+        <ul>
+            <li class="nav-item active">
+                <a class="nav-link" href="/home">Accueil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="liste_fournisseur">Liste des fournisseurs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="Historique">Historique</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="liste_client">Liste des clients</a>
+            </li>
+            <li class="nav-item-out">
+                <a class="nav-link" href="{{url_for('logout')}}"><img class="mb-4" src="./static/img/logout.png" alt=""
+                                                                      width="20" height="20"></a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+<div class="wrapper">
+    <ul>
+        <li class="nav-item active">
+            <a class="nav-link" href="/">Accueil</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="liste_fournisseur">Liste des fournisseurs</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="Historique">Historique</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="liste_client">Liste des clients</a>
+        </li>
+    </ul>
+</div>
+
+
+<h1>Liste des Clients</h1>
+<table>
+    <tr>
+        <th>Id</th>
+        <th>Nom</th>
+        <th>Adresse</th>
+        <th>Téléphone</th>
+        <th>Email</th>
+    </tr>
+    {% for i in row %}
+    <tr>
+        <td>{{ i[0] }}</td>
+        <td>{{ i[1] }}</td>
+        <td>{{ i[2] }}</td>
+        <td>{{ i[3] }}</td>
+        <td>{{ i[4] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<button onclick="show()">Ajouter un client</button>
+<div id="create" style="display:none">
+    <form action="create_client" method="post">
+        <input type="text" name="nom" placeholder="Nom" class="form-control"><br>
+        <input type="text" name="adresse" placeholder="Adresse" class="form-control"><br>
+        <input type="text" name="numéro" placeholder="Numéro" class="form-control"><br>
+        <input type="email" name="email" placeholder="Email" class="form-control"><br>
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+    </form>
+</div>
+</body>
+</html>
+<script>
+    function show() {
+      var x = document.getElementById("create");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+
+
+</script>
